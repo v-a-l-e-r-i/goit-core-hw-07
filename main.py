@@ -152,13 +152,15 @@ class AddressBook(UserDict):
         today = date.today()
 
         for record in self.data.values():
-            birthday_this_year = record.birthday.value.replace(year=today.year)
-            if birthday_this_year < today:
-                birthday_this_year = record.birthday.value.replace(year=today.year + 1)
+            if record.birthday:
+                birthday_this_year = record.birthday.value.replace(year=today.year)
+                if birthday_this_year < today:
+                    birthday_this_year = record.birthday.value.replace(year=today.year + 1)
 
-            if 0 <= (birthday_this_year - today).days <= 7:
-                birthday_this_year = adjust_for_weekend(birthday_this_year)
-                yield f"{record.name} - {birthday_this_year.strftime('%d.%m.%Y')}"
+                if 0 <= (birthday_this_year - today).days <= 7:
+                    birthday_this_year = adjust_for_weekend(birthday_this_year)
+                    yield f"{record.name} - {birthday_this_year.strftime('%d.%m.%Y')}"
+            return None
 
     def __str__(self):
         return '\n'.join(str(record) for record in self.data.values())
