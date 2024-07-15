@@ -158,7 +158,7 @@ class AddressBook(UserDict):
 
             if 0 <= (birthday_this_year - today).days <= 7:
                 birthday_this_year = adjust_for_weekend(birthday_this_year)
-                yield f"{record.name.title()} - {birthday_this_year.strftime('%d.%m.%Y')}"
+                yield f"{record.name} - {birthday_this_year.strftime('%d.%m.%Y')}"
 
     def __str__(self):
         return '\n'.join(str(record) for record in self.data.values())
