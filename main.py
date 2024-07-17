@@ -168,32 +168,41 @@ class AddressBook(UserDict):
 
 @input_error
 def add_contact(args, book: AddressBook):
-    name, phone, *_ = args
-    record = book.find(name)
-    message = "Contact updated."
-    if not record:
-        record = Record(name)
-        book.add_record(record)
-        message = "Contact added."
-    if phone:
-        record.add_phone(phone)
-    return message
+    try:
+        name, phone, *_ = args
+        record = book.find(name)
+        message = "Contact updated."
+        if not record:
+            record = Record(name)
+            book.add_record(record)
+            message = "Contact added."
+        if phone:
+            record.add_phone(phone)
+        return message
+    except Exception as e:
+        return e
 
 
 @input_error
 def edit_contact(args, book: AddressBook):
-    name, *phones = args
-    record = book.find(name)
-    message = record.edit_phone(phones)
-    return message
+    try:
+        name, *phones = args
+        record = book.find(name)
+        message = record.edit_phone(phones)
+        return message
+    except Exception as e:
+        return e
 
 
 @input_error
 def add_birthday(args, book: AddressBook):
-    name, birthday = args
-    record = book.find(name)
-    message = record.add_birthday(birthday)
-    return message
+    try:
+        name, birthday = args
+        record = book.find(name)
+        message = record.add_birthday(birthday)
+        return message
+    except Exception as e:
+        return e
 
 
 @input_error
