@@ -53,8 +53,11 @@ def input_error(func):
 
 def find_next_weekday(start_date, weekday):
     days_ahead = weekday - start_date.weekday()
+    print(days_ahead)
     if days_ahead <= 0:
         days_ahead += 7
+    print(days_ahead)
+    print(start_date + timedelta(days=days_ahead))
     return start_date + timedelta(days=days_ahead)
 
 
@@ -153,18 +156,17 @@ class AddressBook(UserDict):
         return self.data.get(name, None)
 
     def get_upcoming_birthdays(self):
+        upcoming_birthdays = []
         today = date.today()
-
         for record in self.data.values():
-            if record.birthday:
-                birthday_this_year = record.birthday.value.replace(year=today.year)
-                if birthday_this_year < today:
-                    birthday_this_year = record.birthday.value.replace(year=today.year + 1)
+            birthday_this_year = record.birthday.value.replace(year=today.year)
+            if birthday_this_year < today:
+                birthday_this_year = record.birthday.value.replace(year=today.year + 1)
 
-                if 0 <= (birthday_this_year - today).days <= 7:
-                    birthday_this_year = adjust_for_weekend(birthday_this_year)
-                    yield f"{record.name} - {birthday_this_year.strftime('%d.%m.%Y')}"
-            return None
+            if 0 <= (birthday_this_year - today).days <= 7:
+                birthday_this_year = adjust_for_weekend(birthday_this_year)
+                upcoming_birthdays.append({"name": record.name, "birthday": birthday_this_year.strftime('%d.%m.%Y')})
+        return upcoming_birthdays
 
     def __str__(self):
         return '\n'.join(str(record) for record in self.data.values())
@@ -221,7 +223,7 @@ def show_birthday(name, book: AddressBook):
 @input_error
 def birthdays(book: AddressBook):
     for person in book.get_upcoming_birthdays():
-        print(person)
+        print(f"{person['name']} - {person['birthday']}")
 
 
 def main():
