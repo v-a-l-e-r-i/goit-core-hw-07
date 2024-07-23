@@ -30,7 +30,7 @@ def get_phone(func):
 
 def check_name(func):
     def inner(self, name):
-        pattern = r"[a-zA-Z]+"
+        pattern = r"[a-zA-Z]+[a-zA-Z0-9]*"
         if not re.fullmatch(pattern, name):
             raise IncorectNameError("Name must contain at least one letter")
 
@@ -92,6 +92,9 @@ class Birthday(Field):
         except ValueError:
             raise ValueError("Invalid date format. Use DD.MM.YYYY")
 
+    def __str__(self):
+        return self.value.strftime('%d.%m.%Y')
+
 
 class Record:
     def __init__(self, name):
@@ -141,6 +144,7 @@ class AddressBook(UserDict):
     def add_record(self, contact: Record):
         self.data[contact.name.value] = contact
 
+    @input_error
     def delete(self, name):
         self.data.pop(name)
         return f"Contact {name} was deleted!"
@@ -190,6 +194,8 @@ def edit_contact(args, book: AddressBook):
         record = book.find(name)
         message = record.edit_phone(phones)
         return message
+    except AttributeError:
+        return "There is no such contact!"
     except Exception as e:
         return e
 
